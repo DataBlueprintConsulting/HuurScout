@@ -87,8 +87,8 @@ Click **Run Prediction** to view the rental price estimate and deal classificati
 
 ## 📊 Results
 The model achieves:
-- High accuracy with an R² score of 0.89.
-- Mean Absolute Error (MAE) of ~€150.
+- Accuracy with an R² score of 0.65.
+- Mean Absolute Error (MAE) of ~€320.68.
 - Key predictors include `oppervlakte_wonen`, `plaatsnaam`, and `bouwjaar`.
 
 ---
@@ -100,13 +100,8 @@ The model achieves:
 
 ---
 
-## 🤝 Contributing
-Contributions are welcome. Fork the repository, create a branch for your feature, commit your changes, and open a pull request.
-
----
-
 ## 📜 License
-This project is licensed under the MIT License. See the LICENSE file for more details.
+This project is licensed under the MIT License. 
 
 ---
 
