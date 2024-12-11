@@ -121,11 +121,11 @@ def plaatsnaam_statistics(df):
     col1, col2 = st.columns(2)
     with col1:
         st.write("Top 10 Most Expensive Plaatsnamen (Average Rent):")
-        st.write(top_10_expensive)
+        st.write(top_10_expensive.round(0))
     
     with col2:
         st.write("\nTop 10 Cheapest Plaatsnamen (Average Rent):")
-        st.write(top_10_cheapest)
+        st.write(top_10_cheapest.round(0))
 
     # Plot statistics
     fig = plt.figure(figsize=(12, 6))

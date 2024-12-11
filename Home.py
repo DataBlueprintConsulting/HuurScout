@@ -2,8 +2,27 @@ import streamlit as st
 import pandas as pd
 from modules.ml.regression import regression_analysis
 
-st.set_page_config(layout="wide")
-st.title('Huur Data Analysis')
+st.set_page_config(page_title="Home 🏠", layout="wide", page_icon='favicon.ico')
+st.title('Huur Data Analysis 🏠')
+st.logo('logo.png')
+st.html("""
+    <style>
+    [alt=Logo] {
+        height: 2,5rem;
+    }
+    </style>
+""")
+
+# Add an introduction
+st.markdown("""
+Welcome to **HuurScout**! This application is designed to help you analyze rental property data and predict fair rental prices based on key property attributes. 
+
+### What You Can Do Here:
+- Input details about a property, such as its size, location, and energy label.
+- Predict the expected rental price using advanced machine learning models.
+- Evaluate rental deals with **HoeHardWordIkGenaaid-meter**, a deal classification gauge to check if you're getting a good deal.
+- Explore and understand property data trends with interactive visualizations.
+""")
 
 # Load the data
 file = 'data/rental_data.csv'
@@ -99,3 +118,19 @@ if st.button("Run Prediction"):
     st.write(f"Predicted Rent: €{results['predicted_rent']:,.2f}")
     st.write(f"Mean Absolute Error (MAE): {results['mae']:.2f}")
     st.write(f"R² Score: {results['r2']:.2f}")
+
+# Footer
+st.markdown(
+    """
+    ---
+    <div style="text-align: center;">
+        <small>
+            📌 Made by Adam Asbai Halifa | 
+            <a href="https://datablueprintconsulting.nl" target="_blank">Data Blueprint Consulting</a> | 
+            <a href="https://www.linkedin.com/in/adam-asbai-halifa" target="_blank">LinkedIn</a> | 
+            <a href="mailto:a.asbaihalifa@dbp-c.nl">Email</a>
+        </small>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
