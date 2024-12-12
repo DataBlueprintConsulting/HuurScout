@@ -21,11 +21,11 @@ I’m **Adam Asbai Halifa**, a **Data Engineer** currently working at **Volantis
 
 I hold a **Bachelor’s degree in Structural Engineering and Computer Science**, which has given me a unique blend of technical and analytical skills.  
 
-Currently, I am pursuing a **Pre-Master's program in Data Science**, expanding my expertise in advanced analytics, machine learning, and cutting-edge data technologies in the built environment.  
+Currently, I am pursuing a **Pre-Master's program in Data Science** at Radboud University, expanding my expertise in advanced analytics, machine learning, and cutting-edge data technologies.  
 
 In addition to my role at Volantis as a data **engineer**, I work part-time as a **freelancer**, specializing in **data-driven solutions**. With expertise in **Python programming**, I’m deeply interested in **machine learning**, **data science**, **data analysis**, and the transformative power of data to drive decisions and innovations.  
 
-When I’m not building data pipelines or exploring datasets, I enjoy staying active through workouts, traveling on my motorbike, and keeping up with the latest technology trends. I’m always seeking innovative ways to apply these advancements to solve real-world challenges.
+When I’m not building data pipelines or exploring datasets, I enjoy staying active through workouts, traveling on my motorbike, and keeping up with the latest technology trends.
 """)
 
 # Contact details
