@@ -157,7 +157,7 @@ columns_mapping = zip(columns_to_analyze, [col1, col2, col3])
 # Generate visualizations
 for col_name, col in columns_mapping:
     with col:
-        st.subheader(f"Analysis for {col_name}")
+        st.subheader(f"Analysis: {col_name}")
         try:
             # Distribution and KDE plot
             dist_fig = plot_distribution(df, column=col_name)
