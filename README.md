@@ -102,13 +102,3 @@ The model achieves:
 
 ## 📜 License
 This project is licensed under the MIT License. 
-
----
-
-## 🙏 Acknowledgments
-Thanks to the libraries and tools that made this project possible:
-- Pandas
-- NumPy
-- Scikit-learn
-- Matplotlib
-- Streamlit
