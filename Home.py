@@ -83,17 +83,17 @@ woning_type = st.selectbox(
 )
 
 # Define which attributes are relevant for each woning type
-if woning_type == "Grondgebonden woning":
+if woning_type == "Grondgebonden woning 🏠":
     relevant_numeric_features = [f for f in numeric_features if f in [
-        'oppervlakte_wonen', 'slaapkamers', 'aantal_kamers', 'bouwjaar',
-        'inhoud', 'tuin', 'achtertuin', 'ligging_tuin', 'opp_perceel',
-        'voorzieningen', 'verwarming', 'energielabel']] # Example
+        'oppervlakte_wonen', 'slaapkamers', 'aantal_kamers', 'bouwjaar', 
+        'inhoud', 'opp_perceel', 'energielabel', 
+        'aantal_badkamers', 'aantal_woonlagen', 
+        'oppervlakte_kadaster', 'aantal_toiletten']]
     
 else:  # "Stapelwoning"
     relevant_numeric_features = [f for f in numeric_features if f in [
         'oppervlakte_wonen', 'slaapkamers', 'aantal_kamers', 'bouwjaar',
-        'inhoud', 'balkon_dakterras', 'parkeergelegenheid', 'aantal_woonlagen',
-        'voorzieningen', 'verwarming', 'energielabel']] # Example
+        'inhoud', 'aantal_woonlagen', 'energielabel', 'aantal_badkamers', 'aantal_woonlagen']]
 
 relevant_features = relevant_numeric_features + ["energielabel", "plaatsnaam"]
 

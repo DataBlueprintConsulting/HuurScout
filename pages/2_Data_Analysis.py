@@ -116,13 +116,18 @@ else:
         st.text(str(e))
 
     st.markdown("""
-    ### About K-Means Clustering
+    #### About K-Means Clustering
     K-Means clustering is an unsupervised machine learning algorithm used to identify patterns or groupings within the data. 
-
     - **Purpose**: In this analysis, we cluster rental prices (`Huurprijs`) based on locations (`Plaatsnaam`) to uncover trends and groupings within the dataset. 
     - **Benefits**: This can help identify areas with similar rental price ranges, detect anomalies, and provide insights for strategic decision-making.
     - **Insights**: The resulting clusters highlight patterns in the relationship between location and rental pricing, enabling a better understanding of the market segmentation.
+    
+    #### Insights from Cluster Analysis
+    - `Cluster0` == **Expensive Clusters**: High average rental prices, likely representing premium areas.
+    - `Cluster2` == **Medium Clusters**: Moderate average rental prices, representing balanced affordability.
+    - `Cluster1` == **Cheap Clusters**: Low average rental prices, suitable for budget-friendly considerations.
     """)
+    
     # Plaatsnaam Statistics
     st.subheader('📍 Plaatsnaam Statistics')
     try:

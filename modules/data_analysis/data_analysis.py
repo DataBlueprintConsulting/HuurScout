@@ -72,15 +72,21 @@ def kmeans_clustering(df):
     label_encoder = LabelEncoder()
     df['plaatsnaam_encoded'] = label_encoder.fit_transform(df['plaatsnaam'])
 
-    # Select features for clustering
+    # Select features for clustering, dropping rows with missing values
     features = df[['plaatsnaam_encoded', 'huurmaand_woning']].dropna()
 
     # Perform K-Means clustering
     kmeans = KMeans(n_clusters=3, random_state=42)
     features['cluster'] = kmeans.fit_predict(features)
 
-    # Merge cluster assignments back with original data for hover information
-    features['plaatsnaam'] = df['plaatsnaam'].iloc[features.index]
+    # Create a cluster column in the original dataframe
+    df['cluster'] = pd.NA
+    df.loc[features.index, 'cluster'] = features['cluster']
+
+    # Map the encoded plaatsnamen back to their original names, ensuring unique names in each cluster
+    clustered_plaatsnamen = features.groupby('cluster')['plaatsnaam_encoded'].apply(
+        lambda x: list(label_encoder.inverse_transform(x.unique()))
+    )
 
     # Create an interactive plot using Plotly
     fig = px.scatter(
@@ -88,7 +94,7 @@ def kmeans_clustering(df):
         x='plaatsnaam_encoded',
         y='huurmaand_woning',
         color='cluster',
-        hover_data={'plaatsnaam': True, 'cluster': True, 'huurmaand_woning': True},
+        hover_data={'cluster': True, 'huurmaand_woning': True},
         title='K-Means Clustering: Plaatsnaam vs Huurprijs',
         labels={'plaatsnaam_encoded': 'Plaatsnaam (Encoded)', 'huurmaand_woning': 'Huurmaand (€)'},
         color_continuous_scale='Viridis'
@@ -96,8 +102,84 @@ def kmeans_clustering(df):
     fig.update_traces(marker=dict(size=10))  # Customize marker size
     fig.update_layout(coloraxis_colorbar=dict(title='Cluster'))
 
+
     # Display the plot in Streamlit
     st.plotly_chart(fig)
+
+    # Calculate the average rent for each cluster
+    cluster_averages = df.groupby('cluster')['huurmaand_woning'].median().round(2)
+    cluster_averages_rounded = cluster_averages.round(0).astype(int)
+
+    # Predefined categories for clusters
+    predefined_categories = {
+        0: "Expensive",
+        1: "Cheap",
+        2: "Medium"
+    }
+
+    # Create a DataFrame for visualization
+    cluster_results = pd.DataFrame({
+        "Cluster": cluster_averages_rounded.index,
+        "Median Rent (€)": cluster_averages_rounded.values,
+        "Category": [predefined_categories[cluster] for cluster in cluster_averages_rounded.index]
+    })
+    cluster_results = cluster_results.sort_values(by="Median Rent (€)", ascending=False)
+
+    # Add color-coding for categories
+    def highlight_category(row):
+        if row["Category"] == "Expensive":
+            return ["background-color: #FFCCCC"] * len(row)  # Light red
+        elif row["Category"] == "Cheap":
+            return ["background-color: #CCFFCC"] * len(row)  # Light green
+        else:
+            return ["background-color: #FFFFCC"] * len(row)  # Light yellow
+
+    # Display the results in Streamlit
+    st.subheader("Cluster Analysis Results")
+    st.dataframe(cluster_results.style.apply(highlight_category, axis=1), hide_index=True)
+
+    # # Interactive search for locations within expanders
+    # for cluster, plaatsnamen in clustered_plaatsnamen.items():
+    #     with st.expander(f"Cluster {cluster} ({len(plaatsnamen)} locations)"):
+    #         # Search bar for each cluster
+    #         search_query = st.text_input(f"Search locations in Cluster {cluster}", key=f"search_{cluster}")
+            
+    #         # Filter locations based on the search query
+    #         filtered_locations = [
+    #             plaatsnaam for plaatsnaam in plaatsnamen 
+    #             if search_query.lower() in plaatsnaam.lower()
+    #         ]
+            
+    #         # Display the filtered or all locations
+    #         if filtered_locations:
+    #             st.write(", ".join(sorted(filtered_locations)))
+    #         else:
+    #             st.write("No matches found.")
+    
+    # Define the desired cluster order
+    cluster_order = [0, 2, 1]
+
+    # Reorder the clustered_plaatsnamen dictionary
+    ordered_clustered_plaatsnamen = {key: clustered_plaatsnamen[key] for key in cluster_order}
+
+    # Interactive search for locations within expanders
+    for cluster, plaatsnamen in ordered_clustered_plaatsnamen.items():
+        with st.expander(f"Cluster {cluster} ({len(plaatsnamen)} locations)"):
+            # Search bar for each cluster
+            search_query = st.text_input(f"Search locations in Cluster {cluster}", key=f"search_{cluster}")
+            
+            # Filter locations based on the search query
+            filtered_locations = [
+                plaatsnaam for plaatsnaam in plaatsnamen 
+                if search_query.lower() in plaatsnaam.lower()
+            ]
+            
+            # Display the filtered or all locations
+            if filtered_locations:
+                st.write(", ".join(sorted(filtered_locations)))
+            else:
+                st.write("No matches found.")
+
 
 def plaatsnaam_statistics(df):
     """Calculate and plot statistics for plaatsnaam vs huurmaand."""
@@ -110,14 +192,6 @@ def plaatsnaam_statistics(df):
     top_10_expensive = filtered_stats['mean'].sort_values(ascending=False).head(10)
     top_10_cheapest = filtered_stats['mean'].sort_values(ascending=True).head(10)
     
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write("Top 10 Most Expensive Plaatsnamen (Average Rent):")
-        st.write(top_10_expensive.round(0))
-    
-    with col2:
-        st.write("\nTop 10 Cheapest Plaatsnamen (Average Rent):")
-        st.write(top_10_cheapest.round(0))
 
     # Plot statistics
     fig = plt.figure(figsize=(12, 6))
@@ -136,6 +210,15 @@ def plaatsnaam_statistics(df):
 
     plt.tight_layout()
     st.pyplot(fig)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write("Top 10 Most Expensive Plaatsnamen (Average Rent):")
+        st.write(top_10_expensive.round(0))
+    
+    with col2:
+        st.write("\nTop 10 Cheapest Plaatsnamen (Average Rent):")
+        st.write(top_10_cheapest.round(0))
 
 def pairplot_analysis(df, columns):
     """Generate pairplot for specified columns."""
