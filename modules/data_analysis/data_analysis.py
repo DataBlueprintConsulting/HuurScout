@@ -102,7 +102,6 @@ def kmeans_clustering(df):
     fig.update_traces(marker=dict(size=10))  # Customize marker size
     fig.update_layout(coloraxis_colorbar=dict(title='Cluster'))
 
-
     # Display the plot in Streamlit
     st.plotly_chart(fig)
 
@@ -123,7 +122,6 @@ def kmeans_clustering(df):
         "Median Rent (€)": cluster_averages_rounded.values,
         "Category": [predefined_categories[cluster] for cluster in cluster_averages_rounded.index]
     })
-    cluster_results = cluster_results.sort_values(by="Median Rent (€)", ascending=False)
 
     # Add color-coding for categories
     def highlight_category(row):
@@ -134,30 +132,19 @@ def kmeans_clustering(df):
         else:
             return ["background-color: #FFFFCC"] * len(row)  # Light yellow
 
-    # Display the results in Streamlit
+    # Display the reordered cluster results
     st.subheader("Cluster Analysis Results")
     st.dataframe(cluster_results.style.apply(highlight_category, axis=1), hide_index=True)
-
-    # # Interactive search for locations within expanders
-    # for cluster, plaatsnamen in clustered_plaatsnamen.items():
-    #     with st.expander(f"Cluster {cluster} ({len(plaatsnamen)} locations)"):
-    #         # Search bar for each cluster
-    #         search_query = st.text_input(f"Search locations in Cluster {cluster}", key=f"search_{cluster}")
-            
-    #         # Filter locations based on the search query
-    #         filtered_locations = [
-    #             plaatsnaam for plaatsnaam in plaatsnamen 
-    #             if search_query.lower() in plaatsnaam.lower()
-    #         ]
-            
-    #         # Display the filtered or all locations
-    #         if filtered_locations:
-    #             st.write(", ".join(sorted(filtered_locations)))
-    #         else:
-    #             st.write("No matches found.")
     
     # Define the desired cluster order
     cluster_order = [0, 2, 1]
+
+    # Create a DataFrame for visualization
+    cluster_results = pd.DataFrame({
+        "Cluster": cluster_averages_rounded.index,
+        "Median Rent (€)": cluster_averages_rounded.values,
+        "Category": [predefined_categories[cluster] for cluster in cluster_averages_rounded.index]
+    })
 
     # Reorder the clustered_plaatsnamen dictionary
     ordered_clustered_plaatsnamen = {key: clustered_plaatsnamen[key] for key in cluster_order}
@@ -179,7 +166,6 @@ def kmeans_clustering(df):
                 st.write(", ".join(sorted(filtered_locations)))
             else:
                 st.write("No matches found.")
-
 
 def plaatsnaam_statistics(df):
     """Calculate and plot statistics for plaatsnaam vs huurmaand."""
