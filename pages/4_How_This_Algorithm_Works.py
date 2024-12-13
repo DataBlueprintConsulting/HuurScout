@@ -1,6 +1,7 @@
 import streamlit as st
 
-st.title('Under construction 🪚⚒️🚧')
+st.title('How this algorithm works')
+st.header('Under construction 🪚⚒️🚧...')
 st.logo('logo.png')
 st.html("""
     <style>

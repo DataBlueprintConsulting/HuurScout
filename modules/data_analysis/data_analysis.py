@@ -2,12 +2,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy import stats
 import pandas as pd
-import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import LabelEncoder
 import streamlit as st
+import plotly.express as px
 
 def plot_distribution(df, column='huurmaand_woning'):
     """Plot distribution with annotations and KDE, and return the figure."""
@@ -64,12 +62,6 @@ def plot_scatter(df, x_var, y_var='huurmaand_woning'):
     ax.set_xlabel(x_var)
     ax.set_ylabel(y_var)
     return fig
-
-import plotly.express as px
-import pandas as pd
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import LabelEncoder
-import streamlit as st
 
 def kmeans_clustering(df):
     """Perform K-Means clustering on plaatsnaam_encoded and huurmaand_woning with interactive hoverable plot."""

@@ -14,7 +14,6 @@ st.html("""
     </style>
 """)
 
-# Add your personal introduction
 st.markdown("""
 ## Hi there! 👋  
 I’m **Adam Asbai Halifa**, a **Data Engineer** currently working at **Volantis**.  
