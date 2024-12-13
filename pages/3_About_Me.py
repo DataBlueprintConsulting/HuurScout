@@ -15,17 +15,18 @@ st.html("""
 """)
 
 st.markdown("""
-## Hi there! 👋  
-I’m **Adam Asbai Halifa**, a **Data Engineer** currently working at **Volantis**.  
+## Hallo! 👋  
+Mijn naam is **Adam Asbai Halifa**, een **Data Engineer** die momenteel werkt bij **Volantis**.  
 
-I hold a **Bachelor’s degree in Structural Engineering and Computer Science**, which has given me a unique blend of technical and analytical skills.  
+Ik heb een **bacheloropleiding in Bouwkunde en Informatica** afgerond, wat mij een unieke combinatie van technische en analytische vaardigheden heeft gegeven.  
 
-Currently, I am pursuing a **Pre-Master's program in Data Science** at Radboud University, expanding my expertise in advanced analytics, machine learning, and cutting-edge data technologies.  
+Momenteel volg ik een **Pre-Master Data Science** aan de Radboud Universiteit, waar ik mijn expertise uitbreid op het gebied van data analyses, data science, machine learning en data mining.  
 
-In addition to my role at Volantis as a data **engineer**, I work part-time as a **freelancer**, specializing in **data-driven solutions**. With expertise in **Python programming**, I’m deeply interested in **machine learning**, **data science**, **data analysis**, and the transformative power of data to drive decisions and innovations.  
+Naast mijn rol als **data engineer** bij Volantis, werk ik parttime als **freelancer**, gespecialiseerd in **data-gedreven oplossingen**. Met mijn expertise in **Python-programmeren** ben ik sterk geïnteresseerd in **machine learning**, **data science**, **data-analyse** en het toepassen van data om beslissingen en innovaties te stimuleren.  
 
-When I’m not building data pipelines or exploring datasets, I enjoy staying active through workouts, traveling on my motorbike, and keeping up with the latest technology trends.
+Wanneer ik kan niet achter mijn laptop zit, blijf ik graag actief door te sporten, te reizen op mijn motor en op de hoogte te blijven van de nieuwste technologische trends.
 """)
+
 
 # Contact details
 st.markdown("### **Contact Me**")
@@ -33,13 +34,14 @@ st.markdown(f"""
 - **Website**: [datablueprintconsulting.nl](https://datablueprintconsulting.nl/)  
 - **LinkedIn**: https://www.linkedin.com/in/adam-asbai-halifa/ 
 - **Email**: [a.asbaihalifa@dbp-c.nl](mailto:a.asbaihalifa@dbp-c.nl)  
-- **Phone**: +31 6 43801509
+- **Datablueprint Consulting**: [Github](https://github.com/DataBlueprintConsulting)  
+- **Telefoonnummer**: +31 6 43801509
 """)
 
 # Add a call-to-action for collaboration
 st.markdown("""
 ---
-🌟 Feel free to reach out—I’m always open to connecting and collaborating on exciting projects!
+🌟 Voel je vrij om contact op te nemen. Ik sta altijd open voor connecties en samenwerkingen aan interessante data projecten!
 """)
 
 # Footer

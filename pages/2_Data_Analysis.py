@@ -3,7 +3,6 @@ import pandas as pd
 from modules.data_analysis.data_analysis import (
     kmeans_clustering,
     plaatsnaam_statistics,
-    pairplot_analysis,
     correlation_analysis
 )
 
@@ -29,31 +28,32 @@ df = df.drop(columns=[col for col in columns_to_drop if col in df.columns])
 
 # Initialize `selected_places` with default value
 if "selected_places" not in st.session_state:
-    st.session_state["selected_places"] = ["All Locations"]
+    st.session_state["selected_places"] = ["Alle locaties"]
 
 # Reset button
 if st.button("Reset Filters"):
-    st.session_state["selected_places"] = ["All Locations"]
+    st.session_state["selected_places"] = ["Alle locaties"]
 
-# Multi-select dropdown for filtering
+# Meerdere locaties selecteren via dropdown
 selected_places = st.multiselect(
-    "Select one or more locations:",
-    options=["All Locations"] + list(df['plaatsnaam'].unique()),
-    default=st.session_state["selected_places"],  # Use session state to preserve/reset
-    help="Search or select locations to filter the dataset. Choose 'All Locations' to include everything."
+    "Selecteer een of meerdere locaties:",
+    options=["Alle locaties"] + list(df['plaatsnaam'].unique()),
+    default=st.session_state["selected_places"],  # Gebruik sessiestatus om selectie te bewaren/resetten
+    help="Zoek of selecteer locaties om het dataset te filteren. Kies 'Alle locaties' om alles te includeren."
 )
+
 
 # Update session state with the user's selection
 st.session_state["selected_places"] = selected_places
 
 # Apply filter logic
-if "All Locations" in selected_places:
+if "Alle locaties" in selected_places:
     filtered_df = df
 else:
     filtered_df = df[df['plaatsnaam'].isin(selected_places)]
 
 # Display filtered data
-st.write(f"Filtered Dataset: {filtered_df.shape[0]} rows")
+st.write(f"Gefiltereerde Dataset: {filtered_df.shape[0]} rijen")
 st.dataframe(filtered_df, hide_index=True)
 
 if filtered_df.empty:
@@ -64,7 +64,7 @@ else:
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.markdown("### Huurmaand Metrics")
+        st.markdown("### Huurprijs/maand")
         st.write(f"**Min:** {int(filtered_df['huurmaand_woning'].min())} €")
         st.write(f"**Mean:** {int(filtered_df['huurmaand_woning'].mean().round(2))} €")
         st.write(f"**Median:** {int(filtered_df['huurmaand_woning'].median())} €")
@@ -72,7 +72,7 @@ else:
         st.write(f"**Max:** {int(filtered_df['huurmaand_woning'].max())} €")
 
     with col2:
-        st.markdown("### Bouwjaar Metrics")
+        st.markdown("### Bouwjaar")
         st.write(f"**Min:** {int(filtered_df['bouwjaar'].min())}")
         st.write(f"**Mean:** {int(filtered_df['bouwjaar'].mean())}")
         st.write(f"**Median:** {int(filtered_df['bouwjaar'].median())}")
@@ -80,7 +80,7 @@ else:
         st.write(f"**Max:** {int(filtered_df['bouwjaar'].max())}")
 
     with col3:
-        st.markdown("### Inhoud Metrics")
+        st.markdown("### Inhoud")
         st.write(f"**Min:** {int(filtered_df['inhoud'].min())} m³")
         st.write(f"**Mean:** {int(filtered_df['inhoud'].mean().round(2))} m³")
         st.write(f"**Median:** {int(filtered_df['inhoud'].median())} m³")
@@ -88,7 +88,7 @@ else:
         st.write(f"**Max:** {int(filtered_df['inhoud'].max())} m³")
 
     with col4:
-        st.markdown("### Opp Wonen Metrics")
+        st.markdown("### Opp Wonen")
         cleaned_oppervlakte_wonen = filtered_df['oppervlakte_wonen'].dropna()
         st.write(f"**Min:** {int(cleaned_oppervlakte_wonen.min())} m²")
         st.write(f"**Mean:** {int(cleaned_oppervlakte_wonen.mean().round(2))} m²")
@@ -97,14 +97,15 @@ else:
         st.write(f"**Max:** {int(cleaned_oppervlakte_wonen.max())} m²")
 
     st.markdown("""
-    ### About the Metrics
-    The above metrics provide an overview of the key attributes of rental properties in the dataset:
+    ### Over de Metrics
+    De bovenstaande statistieken bieden een overzicht van de belangrijkste kenmerken van huurwoningen in de dataset. Wanneer u filters toepast, worden de statistieken dynamisch aangepast op basis van uw selectie.
 
-    - **Huurmaand Woning Metrics**: A summary of rental prices (in Euros) per month, giving an idea of the cost range, average, and typical pricing patterns.
-    - **Bouwjaar Metrics**: Insights into the construction years of properties, highlighting the age distribution and trends over time.
-    - **Inhoud Metrics**: Details about the volume of properties (in cubic meters), useful for understanding the spaciousness of homes.
-    - **Oppervlakte Wonen Metrics**: Information on the living area (in square meters), helping to assess property sizes and compare different offerings.
+    - **Huurprijs/maand Woning**: Een samenvatting van huurprijzen (in euro's) per maand, die een idee geeft van het prijsbereik, het gemiddelde en typische prijspatronen.
+    - **Bouwjaar**: Inzichten in de bouwjaren van woningen, met nadruk op de leeftijdsverdeling en trends in de tijd.
+    - **Inhoud**: Details over het volume van woningen (in kubieke meters), nuttig voor het begrijpen van de ruimtelijkheid van woningen.
+    - **Oppervlakte Wonen**: Informatie over de woonoppervlakte (in vierkante meters), waarmee de grootte van woningen kan worden beoordeeld en verschillende aanbiedingen kunnen worden vergeleken.
     """)
+
 
     st.markdown("## Advanced Analytics")
 
@@ -116,17 +117,18 @@ else:
         st.text(str(e))
 
     st.markdown("""
-    #### About K-Means Clustering
-    K-Means clustering is an unsupervised machine learning algorithm used to identify patterns or groupings within the data. 
-    - **Purpose**: In this analysis, we cluster rental prices (`Huurprijs`) based on locations (`Plaatsnaam`) to uncover trends and groupings within the dataset. 
-    - **Benefits**: This can help identify areas with similar rental price ranges, detect anomalies, and provide insights for strategic decision-making.
-    - **Insights**: The resulting clusters highlight patterns in the relationship between location and rental pricing, enabling a better understanding of the market segmentation.
-    
-    #### Insights from Cluster Analysis
-    - `Cluster0` == **Expensive Clusters**: High average rental prices, likely representing premium areas.
-    - `Cluster2` == **Medium Clusters**: Moderate average rental prices, representing balanced affordability.
-    - `Cluster1` == **Cheap Clusters**: Low average rental prices, suitable for budget-friendly considerations.
+    #### Over K-Means Clustering
+    K-Means clustering is een unsupervised machine learning-algoritme dat wordt gebruikt om patronen of groeperingen in de gegevens te identificeren.
+    - **Doel**: In deze analyse clusteren we huurprijzen (`Huurprijs`) op basis van locaties (`Plaatsnaam`) om trends en groeperingen in de dataset te ontdekken.
+    - **Waarom**: Dit kan helpen om gebieden met vergelijkbare huurprijsklassen te identificeren, afwijkingen op te sporen en inzichten te bieden voor strategische besluitvorming.
+    - **Inzichten**: De resulterende clusters benadrukken patronen in de relatie tussen locatie en huurprijzen, waardoor een beter begrip van de marktsegmentatie mogelijk wordt.
+
+    #### Inzichten uit de Clusteranalyse
+    - `Cluster0` == **Dure Clusters**: Hoge mediaan huurprijzen, waarschijnlijk vertegenwoordigen ze premium gebieden.
+    - `Cluster2` == **Gemiddelde Clusters**: mediaan huurprijzen, wat een gebalanceerde betaalbaarheid vertegenwoordigt.
+    - `Cluster1` == **Goedkope Clusters**: Lage mediaan huurprijzen, geschikt voor budgetvriendelijke overwegingen.
     """)
+
     
     # Plaatsnaam Statistics
     st.subheader('📍 Plaatsnaam Statistics')
@@ -134,15 +136,16 @@ else:
         plaatsnaam_statistics(df)
     except KeyError as e:
         st.text(str(e))
-
+    
     st.markdown("""
-    ### About Plaatsnaam Statistics
-    This section provides a detailed statistical breakdown of rental data based on different locations (`Plaatsnaam`). 
+    ### Over Plaatsnaamstatistieken
+    Deze sectie biedt een gedetailleerde statistische uitsplitsing van huurgegevens op basis van verschillende locaties (`Plaatsnaam`).
 
-    - **Purpose**: To explore how rental prices vary across different cities or towns. This analysis helps in identifying patterns and trends specific to each location.
-    - **Benefits**: Provides a comparative view of locations, enabling users to make data-driven decisions, whether it's for choosing an affordable area or understanding premium locations.
-    - **Insights**: Users can uncover average rental costs, common trends, and outliers within specific areas, offering valuable information for renters, property investors, and analysts.
+    - **Doel**: Verkennen hoe huurprijzen variëren tussen verschillende steden of dorpen. Deze analyse helpt bij het identificeren van patronen en trends die specifiek zijn voor elke locatie.
+    - **Waarom**: Biedt een vergelijkend overzicht van locaties, zodat gebruikers datagedreven beslissingen kunnen nemen, of het nu gaat om het kiezen van een betaalbare regio of het begrijpen van premium locaties.
+    - **Inzichten**: Gebruikers kunnen gemiddelde huurkosten, veelvoorkomende trends en uitschieters binnen specifieke gebieden ontdekken, wat waardevolle informatie biedt voor huurders, vastgoedinvesteerders en analisten.
     """)
+
 
     # Correlation Analysis
     st.subheader('📈 Correlation Analysis')
@@ -152,39 +155,13 @@ else:
         st.text(str(e))
     st.markdown(
         """
-        ### About the correlation matrix
-        The **correlation analysis** examines how numerical features in the dataset relate to each other.
-        This helps understand which variables have a strong positive or negative relationship, which can 
-        be useful in predictive modeling and feature engineering.
+        ### Over de correlatiematrix
+        De **correlatieanalyse** onderzoekt hoe numerieke kenmerken in de dataset met elkaar samenhangen.
+        Dit helpt te begrijpen welke variabelen een sterke positieve of negatieve relatie hebben, wat 
+        nuttig kan zijn voor voorspellende modellen en feature-engineering.
         """
     )
 
-    # Pairplot Analysis
-    st.subheader('📊 Pairplot Analysis')
-    columns_to_pairplot = ['oppervlakte_wonen', 'slaapkamers', 'huurmaand_woning', 'bouwjaar', 'aantal_kamers']
-    try:
-        pairplot_analysis(df, columns_to_pairplot)
-    except KeyError as e:
-        st.text(str(e))
-    st.markdown(
-        """
-        ### About the pair plot analysis
-        The **pairplot analysis** visualizes the relationships between multiple numerical features in the dataset. 
-        It helps identify trends, correlations, or potential outliers that may exist between these variables. 
-        The selected features include:
-        - `oppervlakte_wonen`: Living area in square meters
-        - `slaapkamers`: Number of bedrooms
-        - `huurmaand_woning`: Monthly rent of the property
-        - `bouwjaar`: Year of construction
-        - `aantal_kamers`: Total number of rooms
-        """
-    )
-    col1, col2, col3 = st.columns(3)
-
-    columns_to_analyze = ["bouwjaar", "inhoud", "oppervlakte_wonen"]
-
-    # Assign one dataframe column per visualization column
-    columns_mapping = zip(columns_to_analyze, [col1, col2, col3])
 
 # Footer
 st.markdown(

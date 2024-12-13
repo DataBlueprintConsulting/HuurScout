@@ -34,14 +34,15 @@ st.html("""
 
 # Add an introduction
 st.markdown("""
-Welcome to **HuurScout**! This application is designed to help you analyze rental property data and predict fair rental prices based on key property attributes. 
+Welkom bij **HuurScout**! Deze applicatie is ontworpen om u te helpen bij het analyseren van huurwoningdata en het voorspellen van eerlijke huurprijzen op basis van belangrijke eigenschappen van de woning.
 
-### What You Can Do Here:
-- Input details about a property, such as its size, location, and energy label.
-- Predict the expected rental price using advanced machine learning models.
-- Evaluate rental deals with **HoeHardWordIkGenaaid-meter**.
-- Explore property data trends with interactive visualizations.
+### Wat U Hier Kunt Doen:
+- Voer details in over een woning, zoals grootte, locatie en energielabel.
+- Voorspel de verwachte huurprijs met behulp van geavanceerde machine learning-modellen.
+- Beoordeel huuraanbiedingen met de **HoeHardWordIkGenaaid-meter**.
+- Ontdek trends in woningdata met interactieve visualisaties.
 """)
+
 
 # Load the data
 file = 'data/rental_data.csv'
@@ -78,7 +79,7 @@ plaatsnaam_features = [col for col in categorical_features if col.startswith("pl
 
 # Add a selectbox for the type of woning
 woning_type = st.selectbox(
-    "Select the Type of Woning:",
+    "Selecteer het type woning:",
     ["Grondgebonden woning 🏠", "Stapelwoning 🏢"]
 )
 
@@ -98,15 +99,15 @@ else:  # "Stapelwoning"
 relevant_features = relevant_numeric_features + ["energielabel", "plaatsnaam"]
 
 # Dynamic attribute selection
-st.markdown("## Select Attributes to Input")
+st.markdown("## Selecteer attributen om in te voeren")
 selected_features = st.multiselect(
-    "Choose the attributes you want to provide inputs for:",
+    "Kies de attributen waarvoor je invoer wilt geven:",
     options=relevant_features,
     default=relevant_features,
 )
 
 # Collect user inputs
-st.markdown("### Input Feature Values")
+st.markdown("### Voer Kenmerkwaarden in")
 input_data = {feature: 0 for feature in numeric_features + categorical_features}  # Initialize with zeros
 
 # Handle numeric inputs
@@ -114,7 +115,7 @@ for feature in selected_features:
     if feature in numeric_features:
         input_data[feature] = int(
             st.number_input(
-                f"Enter value for {feature}:",
+                f"Voer waarde in voor {feature}:",
                 value=int(default_numeric.get(feature, 0)),  # get default or 0 if not found
                 step=1,
             )
@@ -122,44 +123,44 @@ for feature in selected_features:
 
 # Handle categorical inputs
 if "energielabel" in selected_features:
-    st.subheader("Energielabel Selection")
+    st.subheader("Selecteer energielabel")
     energielabel_display_options = [option[len("energielabel_"):] for option in energielabel_features]
     default_label = default_categorical["energielabel"]
     if default_label not in energielabel_display_options:
         default_label = energielabel_display_options[0]
-    energielabel_selected = st.selectbox("Select Energielabel:", energielabel_display_options, index=energielabel_display_options.index(default_label))
+    energielabel_selected = st.selectbox("Selecteer Energielabel:", energielabel_display_options, index=energielabel_display_options.index(default_label))
     for option in energielabel_features:
         input_data[option] = 1 if option == f"energielabel_{energielabel_selected}" else 0
 
 if "plaatsnaam" in selected_features:
-    st.subheader("Plaatsnaam Selection")
+    st.subheader("Selecteer plaatsnaam")
     plaatsnaam_display_options = [option[len("plaatsnaam_"):] for option in plaatsnaam_features]
     default_place = default_categorical["plaatsnaam"]
     if default_place not in plaatsnaam_display_options:
         default_place = plaatsnaam_display_options[0]
-    plaatsnaam_selected = st.selectbox("Select Plaatsnaam:", plaatsnaam_display_options, index=plaatsnaam_display_options.index(default_place))
+    plaatsnaam_selected = st.selectbox("Selecteer Plaatsnaam:", plaatsnaam_display_options, index=plaatsnaam_display_options.index(default_place))
     for option in plaatsnaam_features:
         input_data[option] = 1 if option == f"plaatsnaam_{plaatsnaam_selected}" else 0
 
 actual_rent = int(
     st.number_input(
-        "Actual Rent (Huurmaand Woning):",
+        "Werkelijke huurprijs (Huurmaand Woning):",
         value=1200,
         step=1,
     )
 )
 
-if st.button("Run Prediction"):
+if st.button("Voer voorspelling uit"):
     new_data = pd.DataFrame([input_data])
-    # Align new_data with trained_features
+    # Lijn nieuwe gegevens uit met getrainde functies
     new_data = new_data.reindex(columns=trained_features, fill_value=0)
-    # Ensure alignment
-    assert set(new_data.columns) == set(trained_features), "Feature mismatch"
-    # Prediction
+    # Zorg voor uitlijning
+    assert set(new_data.columns) == set(trained_features), "Kenmerken komen niet overeen"
+    # Voorspelling
     results = regression_analysis(df, new_data, actual_rent)
     # Display results
-    st.write("Prediction Results:")
-    st.write(f"Predicted Rent: €{results['predicted_rent']:,.2f}")
+    st.write("Voorspellingsresultaten:")
+    st.write(f"Voorspelde huur: €{results['predicted_rent']:,.2f}")
     st.write(f"Mean Absolute Error (MAE): {results['mae']:.2f}")
     st.write(f"R² Score: {results['r2']:.2f}")
 

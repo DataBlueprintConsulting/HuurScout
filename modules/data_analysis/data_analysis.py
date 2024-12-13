@@ -96,7 +96,7 @@ def kmeans_clustering(df):
         color='cluster',
         hover_data={'cluster': True, 'huurmaand_woning': True},
         title='K-Means Clustering: Plaatsnaam vs Huurprijs',
-        labels={'plaatsnaam_encoded': 'Plaatsnaam (Encoded)', 'huurmaand_woning': 'Huurmaand (€)'},
+        labels={'plaatsnaam_encoded': 'Plaatsnaam', 'huurmaand_woning': 'Huurprijs/maand (€)'},
         color_continuous_scale='Viridis'
     )
     fig.update_traces(marker=dict(size=10))  # Customize marker size
@@ -112,28 +112,29 @@ def kmeans_clustering(df):
     # Predefined categories for clusters
     predefined_categories = {
         0: "Expensive",
-        1: "Cheap",
-        2: "Medium"
+        2: "Medium",
+        1: "Cheap"
     }
 
     # Create a DataFrame for visualization
     cluster_results = pd.DataFrame({
         "Cluster": cluster_averages_rounded.index,
-        "Median Rent (€)": cluster_averages_rounded.values,
-        "Category": [predefined_categories[cluster] for cluster in cluster_averages_rounded.index]
+        "Mediaan Huurprijs (€)": cluster_averages_rounded.values,
+        "Categorie": [predefined_categories[cluster] for cluster in cluster_averages_rounded.index]
     })
+    cluster_results = cluster_results.sort_values(by="Mediaan Huurprijs (€)", ascending=False)
 
     # Add color-coding for categories
     def highlight_category(row):
-        if row["Category"] == "Expensive":
+        if row["Categorie"] == "Expensive":
             return ["background-color: #FFCCCC"] * len(row)  # Light red
-        elif row["Category"] == "Cheap":
+        elif row["Categorie"] == "Cheap":
             return ["background-color: #CCFFCC"] * len(row)  # Light green
         else:
             return ["background-color: #FFFFCC"] * len(row)  # Light yellow
 
     # Display the reordered cluster results
-    st.subheader("Cluster Analysis Results")
+    st.subheader("Clustering Analyse Resultaten")
     st.dataframe(cluster_results.style.apply(highlight_category, axis=1), hide_index=True)
     
     # Define the desired cluster order
@@ -142,8 +143,8 @@ def kmeans_clustering(df):
     # Create a DataFrame for visualization
     cluster_results = pd.DataFrame({
         "Cluster": cluster_averages_rounded.index,
-        "Median Rent (€)": cluster_averages_rounded.values,
-        "Category": [predefined_categories[cluster] for cluster in cluster_averages_rounded.index]
+        "Mediaan Huurprijs (€)": cluster_averages_rounded.values,
+        "Categorie": [predefined_categories[cluster] for cluster in cluster_averages_rounded.index]
     })
 
     # Reorder the clustered_plaatsnamen dictionary
@@ -153,7 +154,7 @@ def kmeans_clustering(df):
     for cluster, plaatsnamen in ordered_clustered_plaatsnamen.items():
         with st.expander(f"Cluster {cluster} ({len(plaatsnamen)} locations)"):
             # Search bar for each cluster
-            search_query = st.text_input(f"Search locations in Cluster {cluster}", key=f"search_{cluster}")
+            search_query = st.text_input(f"Zoek plaatsnaam in Cluster {cluster}", key=f"search_{cluster}")
             
             # Filter locations based on the search query
             filtered_locations = [
@@ -184,14 +185,14 @@ def plaatsnaam_statistics(df):
 
     plt.subplot(1, 2, 1)
     top_10_expensive.plot(kind='bar', color='red')
-    plt.title('Top 10 Most Expensive Plaatsnamen')
-    plt.ylabel('Average Huurmaand (€)')
+    plt.title('Top 10 Duurste Plaatsnamen Huur')
+    plt.ylabel('Gemiddelde Huurprijs/maand (€)')
     plt.xticks(rotation=45)
 
     plt.subplot(1, 2, 2)
     top_10_cheapest.plot(kind='bar', color='green')
-    plt.title('Top 10 Cheapest Plaatsnamen')
-    plt.ylabel('Average Huurmaand (€)')
+    plt.title('Top 10 Goedkoopste Plaatsnamen Huur')
+    plt.ylabel('Gemiddelde Huurprijs/maand (€)')
     plt.xticks(rotation=45)
 
     plt.tight_layout()
@@ -199,18 +200,13 @@ def plaatsnaam_statistics(df):
 
     col1, col2 = st.columns(2)
     with col1:
-        st.write("Top 10 Most Expensive Plaatsnamen (Average Rent):")
+        st.write("Top 10 Duurste Plaatsnamen (Gemiddelde huur):")
         st.write(top_10_expensive.round(0))
     
     with col2:
-        st.write("\nTop 10 Cheapest Plaatsnamen (Average Rent):")
+        st.write("\nTop 10 Goedkoopste Plaatsnamen (Gemiddelde huur):")
         st.write(top_10_cheapest.round(0))
 
-def pairplot_analysis(df, columns):
-    """Generate pairplot for specified columns."""
-    sns.set()
-    fig = sns.pairplot(df[columns], height=2.5).fig
-    st.pyplot(fig)
 
 def correlation_analysis(df):
     """Perform correlation analysis on numerical and one-hot encoded data."""
@@ -238,8 +234,8 @@ def correlation_analysis(df):
     huurmaand_corr = corrmat_with_labels['huurmaand_woning'].dropna().sort_values(ascending=False)
     col1, col2 = st.columns(2)
     with col1:    
-        st.write("Top correlations with 'huurmaand_woning':")
+        st.write("Top correlaties met huurprijs:")
         st.write(huurmaand_corr.head(25))
     with col2:    
-        st.write("\nLowest correlations with 'huurmaand_woning':")
+        st.write("\nLaagste correlaties met huurprijs':")
         st.write(huurmaand_corr.tail(25))
