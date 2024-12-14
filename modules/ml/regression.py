@@ -78,7 +78,7 @@ def regression_analysis(df, new_data, actual_rent):
         value=deviation,
         number={'suffix': '%'},
         title={
-            'text': f"HoeHardWordIkGenaaid-meter Deal Classification: {classification}<br>Predicted Rent: €{predicted_rent:,.2f} <br>Actual Rent: €{actual_rent:,.2f}"
+            'text': f"Eerlijke Huurmeter Deal Classification: {classification}<br>Predicted Rent: €{predicted_rent:,.2f} <br>Actual Rent: €{actual_rent:,.2f}"
         },
         gauge={
             'shape': 'angular',
