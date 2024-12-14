@@ -16,7 +16,7 @@ st.html("""
 
 st.markdown("""
 ## Hallo! 👋  
-Mijn naam is **Adam Asbai Halifa**, een **Data Engineer** die momenteel werkt bij **Volantis**.  
+Mijn naam is **Adam Asbai Halifa**, een **Data Engineer** die werkt bij **Volantis**.  
 
 Ik heb een **bacheloropleiding in Bouwkunde en Informatica** afgerond, wat mij een unieke combinatie van technische en analytische vaardigheden heeft gegeven.  
 
