@@ -1,26 +1,18 @@
 import streamlit as st
 import pandas as pd
 from modules.ml.regression import regression_analysis
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Home 🏠", 
     layout="wide", 
     page_icon='favicon.ico')
 
-# Google Analytics Script
-GA_SCRIPT = """
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-HJB59JJYS5"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+# Include Google Analytics tracking code
+with open("analytics.html", "r") as f:
+    html_code = f.read()
+    components.html(html_code, height=0)
 
-    gtag('config', 'G-HJB59JJYS5');
-</script>
-"""
-
-# Embed Google Analytics Script
-st.markdown(GA_SCRIPT, unsafe_allow_html=True)
 
 st.title('Huur Data Analysis 🏠')
 st.logo('logo.png')
