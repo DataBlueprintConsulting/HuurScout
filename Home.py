@@ -1,18 +1,11 @@
 import streamlit as st
 import pandas as pd
 from modules.ml.regression import regression_analysis
-import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Home 🏠", 
     layout="wide", 
     page_icon='favicon.ico')
-
-# Include Google Analytics tracking code
-with open("analytics.html", "r") as f:
-    html_code = f.read()
-    components.html(html_code, height=0)
-
 
 st.title('Huur Data Analysis 🏠')
 st.logo('logo.png')
