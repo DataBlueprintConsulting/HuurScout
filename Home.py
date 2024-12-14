@@ -41,8 +41,9 @@ Welkom bij **HuurScout**! Deze applicatie is ontworpen om u te helpen bij het an
 - Voorspel de verwachte huurprijs met behulp van geavanceerde machine learning-modellen.
 - Beoordeel huuraanbiedingen met de **HoeHardWordIkGenaaid-meter**.
 - Ontdek trends in woningdata met interactieve visualisaties.
+### Belangrijk:
+De voorspellingen die deze applicatie geeft, zijn gebaseerd op een machine learning-algoritme en bieden een **globale inschatting** van de huurprijs. Dit kan helpen om een indicatie te krijgen, maar is geen vervanging voor een uitgebreide waardebepaling door een expert.
 """)
-
 
 # Load the data
 file = 'data/rental_data.csv'

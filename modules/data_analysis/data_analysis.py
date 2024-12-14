@@ -76,7 +76,7 @@ def kmeans_clustering(df):
     features = df[['plaatsnaam_encoded', 'huurmaand_woning']].dropna()
 
     # Perform K-Means clustering
-    kmeans = KMeans(n_clusters=3, random_state=42)
+    kmeans = KMeans(n_clusters=5, random_state=42)
     features['cluster'] = kmeans.fit_predict(features)
 
     # Create a cluster column in the original dataframe
@@ -109,64 +109,54 @@ def kmeans_clustering(df):
     cluster_averages = df.groupby('cluster')['huurmaand_woning'].median().round(2)
     cluster_averages_rounded = cluster_averages.round(0).astype(int)
 
-    # Predefined categories for clusters
+    # Predefined categories for clusters (in Dutch)
     predefined_categories = {
-        0: "Expensive",
-        2: "Medium",
-        1: "Cheap"
+        0: "Premium",
+        1: "Hoog Segment",
+        2: "Midden Segment",
+        3: "Betaalbaar",
+        4: "Budget"
     }
 
     # Create a DataFrame for visualization
     cluster_results = pd.DataFrame({
         "Cluster": cluster_averages_rounded.index,
-        "Mediaan Huurprijs (€)": cluster_averages_rounded.values,
+        "Mediaan Huurprijs (€)": cluster_averages_rounded.values.astype(int),  # Ensure integers
         "Categorie": [predefined_categories[cluster] for cluster in cluster_averages_rounded.index]
     })
-    cluster_results = cluster_results.sort_values(by="Mediaan Huurprijs (€)", ascending=False)
 
-    # Add color-coding for categories
+    # Sort clusters by median rent
+    cluster_averages_sorted = cluster_averages.sort_values(ascending=False).astype(int)  # Ensure integers
+
+    # Dynamically assign categories based on sorted order
+    categories = ["Premium", "Hoog Segment", "Midden Segment", "Betaalbaar", "Budget"]
+    predefined_categories = {
+        cluster: categories[i] for i, cluster in enumerate(cluster_averages_sorted.index)
+    }
+
+    # Create the DataFrame for visualization
+    cluster_results = pd.DataFrame({
+        "Cluster": cluster_averages_sorted.index,
+        "Mediaan Huurprijs (€)": cluster_averages_sorted.values.astype(int),  # Ensure integers
+        "Categorie": [predefined_categories[cluster] for cluster in cluster_averages_sorted.index]
+    }).reset_index(drop=True)
+
+    # Define color mapping for the categories
+    category_colors = {
+        "Premium": "background-color: #FFCCCC",  # Light red
+        "Hoog Segment": "background-color: #FFDD99",      # Light orange
+        "Midden Segment": "background-color: #FFFFCC", # Light yellow
+        "Betaalbaar": "background-color: #CCFFCC",  # Light green
+        "Budget": "background-color: #CCE5FF"  # Light blue
+    }
+
+    # Function to apply colors based on category
     def highlight_category(row):
-        if row["Categorie"] == "Expensive":
-            return ["background-color: #FFCCCC"] * len(row)  # Light red
-        elif row["Categorie"] == "Cheap":
-            return ["background-color: #CCFFCC"] * len(row)  # Light green
-        else:
-            return ["background-color: #FFFFCC"] * len(row)  # Light yellow
+        return [category_colors.get(row["Categorie"], "")] * len(row)
 
-    # Display the reordered cluster results
+    # Display the updated DataFrame with color-coded categories
     st.subheader("Clustering Analyse Resultaten")
     st.dataframe(cluster_results.style.apply(highlight_category, axis=1), hide_index=True)
-    
-    # Define the desired cluster order
-    cluster_order = [0, 2, 1]
-
-    # Create a DataFrame for visualization
-    cluster_results = pd.DataFrame({
-        "Cluster": cluster_averages_rounded.index,
-        "Mediaan Huurprijs (€)": cluster_averages_rounded.values,
-        "Categorie": [predefined_categories[cluster] for cluster in cluster_averages_rounded.index]
-    })
-
-    # Reorder the clustered_plaatsnamen dictionary
-    ordered_clustered_plaatsnamen = {key: clustered_plaatsnamen[key] for key in cluster_order}
-
-    # Interactive search for locations within expanders
-    for cluster, plaatsnamen in ordered_clustered_plaatsnamen.items():
-        with st.expander(f"Cluster {cluster} ({len(plaatsnamen)} locations)"):
-            # Search bar for each cluster
-            search_query = st.text_input(f"Zoek plaatsnaam in Cluster {cluster}", key=f"search_{cluster}")
-            
-            # Filter locations based on the search query
-            filtered_locations = [
-                plaatsnaam for plaatsnaam in plaatsnamen 
-                if search_query.lower() in plaatsnaam.lower()
-            ]
-            
-            # Display the filtered or all locations
-            if filtered_locations:
-                st.write(", ".join(sorted(filtered_locations)))
-            else:
-                st.write("No matches found.")
 
 def plaatsnaam_statistics(df):
     """Calculate and plot statistics for plaatsnaam vs huurmaand."""
