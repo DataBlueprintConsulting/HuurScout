@@ -124,11 +124,12 @@ else:
     - **Inzichten**: De resulterende clusters benadrukken patronen in de relatie tussen locatie en huurprijzen, waardoor een beter begrip van de marktsegmentatie mogelijk wordt.
 
     #### Inzichten uit de Clusteranalyse
-    - `Cluster4` == **'Premium' Clusters**: Hoge mediaan huurprijzen, waarschijnlijk vertegenwoordigen ze exclusieve of luxueuze gebieden.
-    - `Cluster3` == **'Hoog Segment' Clusters**: Boven gemiddelde mediaan huurprijzen, vaak voorkomend in gewilde gebieden.
-    - `Cluster2` == **'Midden Segment' Clusters**: Gemiddelde mediaan huurprijzen, wat een balans biedt tussen prijs en kwaliteit.
-    - `Cluster1` == **'Betaalbare' Clusters**: Relatief lage mediaan huurprijzen, geschikt voor mensen met een beperkt budget.
-    - `Cluster0` == **'Budget' Clusters**: Zeer lage mediaan huurprijzen, ideaal voor wie op zoek is naar de meest betaalbare opties.
+    - `Cluster4` == **'Premium Segment' Clusters**: Woningen in exclusieve gebieden.
+    - `Cluster3` == **'Luxe Segment' Clusters**: Premium woningen in gewilde en populaire locaties.
+    - `Cluster1` == **'Hoog Segment' Clusters**: Woningen die een balans bieden tussen kwaliteit en comfort.
+    - `Cluster2` == **'Midden Segment' Clusters**: Betaalbare woningen met een goede prijs-kwaliteitverhouding.
+    - `Cluster0` == **'Laag Segment' Clusters**: De meest toegankelijke en budgetvriendelijke woningen.
+
     """)
     
     # Plaatsnaam Statistics

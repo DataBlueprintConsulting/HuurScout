@@ -107,29 +107,10 @@ def kmeans_clustering(df):
 
     # Calculate the average rent for each cluster
     cluster_averages = df.groupby('cluster')['huurmaand_woning'].median().round(2)
-    cluster_averages_rounded = cluster_averages.round(0).astype(int)
-
-    # Predefined categories for clusters (in Dutch)
-    predefined_categories = {
-        0: "Premium",
-        1: "Hoog Segment",
-        2: "Midden Segment",
-        3: "Betaalbaar",
-        4: "Budget"
-    }
-
-    # Create a DataFrame for visualization
-    cluster_results = pd.DataFrame({
-        "Cluster": cluster_averages_rounded.index,
-        "Mediaan Huurprijs (€)": cluster_averages_rounded.values.astype(int),  # Ensure integers
-        "Categorie": [predefined_categories[cluster] for cluster in cluster_averages_rounded.index]
-    })
-
-    # Sort clusters by median rent
-    cluster_averages_sorted = cluster_averages.sort_values(ascending=False).astype(int)  # Ensure integers
+    cluster_averages_sorted = cluster_averages.sort_values(ascending=False)
 
     # Dynamically assign categories based on sorted order
-    categories = ["Premium", "Hoog Segment", "Midden Segment", "Betaalbaar", "Budget"]
+    categories = ["Premium Segment", "Luxe Segment", "Hoog Segment", "Midden Segment", "Laag Segment"]
     predefined_categories = {
         cluster: categories[i] for i, cluster in enumerate(cluster_averages_sorted.index)
     }
@@ -143,11 +124,11 @@ def kmeans_clustering(df):
 
     # Define color mapping for the categories
     category_colors = {
-        "Premium": "background-color: #FFCCCC",  # Light red
-        "Hoog Segment": "background-color: #FFDD99",      # Light orange
-        "Midden Segment": "background-color: #FFFFCC", # Light yellow
-        "Betaalbaar": "background-color: #CCFFCC",  # Light green
-        "Budget": "background-color: #CCE5FF"  # Light blue
+        "Premium Segment": "background-color: #FFCCCC",  # Light red
+        "Luxe Segment": "background-color: #FFDD99",      # Light orange
+        "Hoog Segment": "background-color: #FFFFCC",    # Light yellow
+        "Midden Segment": "background-color: #CCFFCC",        # Light green
+        "Laag Segment": "background-color: #CCE5FF"            # Light blue
     }
 
     # Function to apply colors based on category
@@ -157,6 +138,27 @@ def kmeans_clustering(df):
     # Display the updated DataFrame with color-coded categories
     st.subheader("Clustering Analyse Resultaten")
     st.dataframe(cluster_results.style.apply(highlight_category, axis=1), hide_index=True)
+
+    # Reorder the clustered_plaatsnamen dictionary based on sorted cluster order
+    ordered_clustered_plaatsnamen = {cluster: clustered_plaatsnamen[cluster] for cluster in cluster_averages_sorted.index}
+
+    # Interactive search for locations within expanders
+    for cluster, plaatsnamen in ordered_clustered_plaatsnamen.items():
+        with st.expander(f"Cluster {cluster} ({len(plaatsnamen)} locaties) - {predefined_categories[cluster]}"):
+            # Search bar for each cluster
+            search_query = st.text_input(f"Zoek plaatsnaam in Cluster {cluster}", key=f"search_{cluster}")
+            
+            # Filter locations based on the search query
+            filtered_locations = [
+                plaatsnaam for plaatsnaam in plaatsnamen 
+                if search_query.lower() in plaatsnaam.lower()
+            ]
+            
+            # Display the filtered or all locations
+            if filtered_locations:
+                st.write(", ".join(sorted(filtered_locations)))
+            else:
+                st.write("Geen resultaten gevonden.")
 
 def plaatsnaam_statistics(df):
     """Calculate and plot statistics for plaatsnaam vs huurmaand."""
@@ -197,7 +199,6 @@ def plaatsnaam_statistics(df):
         st.write("\nTop 10 Goedkoopste Plaatsnamen (Gemiddelde huur):")
         st.write(top_10_cheapest.round(0))
 
-
 def correlation_analysis(df):
     """Perform correlation analysis on numerical and one-hot encoded data."""
     numerical_df = df.select_dtypes(include=['number'])
@@ -213,12 +214,7 @@ def correlation_analysis(df):
     one_hot_labels = pd.get_dummies(df[['energielabel', 'soort_bouw', 'soort_woonhuis', 'soort_dak', 'cv_ketel', 'plaatsnaam']])
     numerical_df_with_labels = pd.concat([numerical_df, one_hot_labels], axis=1)
 
-    # Correlation matrix with one-hot encoding
     corrmat_with_labels = numerical_df_with_labels.corr()
-    # f, ax = plt.subplots(figsize=(12, 9))
-    # sns.heatmap(corrmat_with_labels, vmax=0.8, square=True, cmap='coolwarm')
-    # plt.title('Correlation Matrix with One-Hot Encoding')
-    # st.pyplot(f)
 
     # Correlation with huurmaand_woning
     huurmaand_corr = corrmat_with_labels['huurmaand_woning'].dropna().sort_values(ascending=False)
