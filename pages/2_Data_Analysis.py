@@ -30,6 +30,17 @@ df = df.drop(columns=[col for col in columns_to_drop if col in df.columns])
 if "selected_places" not in st.session_state:
     st.session_state["selected_places"] = ["Alle locaties"]
 
+st.markdown("""
+Op deze pagina kunt u huurwoningdata diepgaand analyseren en inzichten verkrijgen over huurprijzen en markttrends.
+
+### Wat U Hier Kunt Doen:
+- Filter gegevens op basis van locaties en andere woningkenmerken.
+- Ontdek marktsegmenten door middel van **K-Means Clustering**.
+- Bekijk statistieken zoals gemiddelde huurprijs, bouwjaar, en woninggrootte.
+- Analyseer correlaties tussen variabelen en krijg een beter begrip van de data.
+
+""")
+st.markdown('***')
 # Reset button
 if st.button("Reset Filters"):
     st.session_state["selected_places"] = ["Alle locaties"]
@@ -55,6 +66,7 @@ else:
 # Display filtered data
 st.write(f"Gefiltereerde Dataset: {filtered_df.shape[0]} rijen")
 st.dataframe(filtered_df, hide_index=True)
+
 
 if filtered_df.empty:
     st.warning("No data available for the selected filters.")
