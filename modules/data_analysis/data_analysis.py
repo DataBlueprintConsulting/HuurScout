@@ -177,13 +177,13 @@ def plaatsnaam_statistics(df):
 
     plt.subplot(1, 2, 1)
     top_10_expensive.plot(kind='bar', color='red')
-    plt.title('Top 10 Duurste Plaatsnamen Huur')
+    plt.title('Top 10 Duurste Plaatsnamen Huurprijs/maand (€)')
     plt.ylabel('Gemiddelde Huurprijs/maand (€)')
     plt.xticks(rotation=45)
 
     plt.subplot(1, 2, 2)
     top_10_cheapest.plot(kind='bar', color='green')
-    plt.title('Top 10 Goedkoopste Plaatsnamen Huur')
+    plt.title('Top 10 Goedkoopste Plaatsnamen Huurprijs/maand (€)')
     plt.ylabel('Gemiddelde Huurprijs/maand (€)')
     plt.xticks(rotation=45)
 
