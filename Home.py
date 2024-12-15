@@ -7,7 +7,7 @@ st.set_page_config(
     layout="wide", 
     page_icon='favicon.ico')
 
-st.title('Huur Data Analysis 🏠')
+st.title('HuurScout 🏠')
 st.logo('logo.png')
 st.html("""
     <style>
